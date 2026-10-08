@@ -274,27 +274,30 @@
 </footer>
 
 <!-- ============================================================
-     ЯНДЕКС.МЕТРИКА
-     Замените 00000000 на номер вашего счётчика в двух местах:
-     в вызове ym(...) и в адресе картинки внутри <noscript>.
+     ЯНДЕКС.МЕТРИКА - счётчик 113557734
      ============================================================ -->
 <script type="text/javascript">
-  var METRIKA_ID = 00000000;
+  var METRIKA_ID = 113557734;
 
-  (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-  m[i].l=1*new Date();
-  for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-  (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+  (function(m,e,t,r,i,k,a){
+      m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();
+      for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+      k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+  })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113557734', 'ym');
 
-  ym(METRIKA_ID, "init", {
-    clickmap: true,          // карта кликов
-    trackLinks: true,        // отслеживание внешних ссылок
-    accurateTrackBounce: true,
-    webvisor: true           // Вебвизор
+  ym(113557734, 'init', {
+    ssr: true,
+    webvisor: true,            // Вебвизор
+    clickmap: true,            // карта кликов
+    ecommerce: "dataLayer",
+    referrer: document.referrer,
+    url: location.href,
+    accurateTrackBounce: true, // уточнённый показатель отказов
+    trackLinks: true           // отслеживание внешних ссылок
   });
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/00000000" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<noscript><div><img src="https://mc.yandex.ru/watch/113557734" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
 <!-- ============================================================
      ЦЕЛИ
@@ -305,7 +308,7 @@
 <script>
   // безопасный вызов: страница работает и без счётчика
   function goal(name, params) {
-    if (typeof ym === 'function' && METRIKA_ID !== 00000000) {
+    if (typeof ym === 'function' && METRIKA_ID && typeof METRIKA_ID === 'number') {
       ym(METRIKA_ID, 'reachGoal', name, params || {});
     }
     console.log('[goal]', name, params || '');
@@ -359,7 +362,7 @@
 
     // смена адреса без перезагрузки - для цели "Посещение страниц"
     history.pushState(null, '', '#thanks');
-    if (typeof ym === 'function' && METRIKA_ID !== 00000000) {
+    if (typeof ym === 'function' && METRIKA_ID && typeof METRIKA_ID === 'number') {
       ym(METRIKA_ID, 'hit', window.location.pathname + '#thanks', { title: 'Заявка отправлена' });
     }
   });
