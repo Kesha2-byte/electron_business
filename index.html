@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qoldau - ИИ-ассистент поддержки для онлайн-продавцов</title>
+<meta name="description" content="Qoldau отвечает вашим покупателям в WhatsApp и Instagram на казахском и русском языках круглосуточно. Сложные вопросы передаёт вам.">
+<style>
+  :root{
+    --bg:#ffffff;
+    --ink:#14181f;
+    --muted:#5c6673;
+    --line:#e4e8ee;
+    --brand:#0f7b5f;
+    --brand-dark:#0b5c47;
+    --soft:#f4f8f6;
+    --accent:#f0a830;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+  a{color:inherit}
+
+  /* шапка */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{font-weight:700;font-size:20px;letter-spacing:-.02em}
+  .logo span{color:var(--brand)}
+  .nav-links{display:flex;gap:26px;font-size:15px;color:var(--muted)}
+  .nav-links a{text-decoration:none}
+  .nav-links a:hover{color:var(--ink)}
+  @media(max-width:760px){.nav-links{display:none}}
+
+  .btn{
+    display:inline-block;border:none;cursor:pointer;font:inherit;font-weight:600;
+    padding:13px 24px;border-radius:10px;text-decoration:none;transition:.15s;
+  }
+  .btn-main{background:var(--brand);color:#fff}
+  .btn-main:hover{background:var(--brand-dark)}
+  .btn-ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+  .btn-ghost:hover{background:var(--soft)}
+  .btn-sm{padding:9px 18px;font-size:15px}
+
+  /* первый экран */
+  .hero{padding:72px 0 64px;background:linear-gradient(180deg,var(--soft),#fff)}
+  .hero h1{font-size:46px;line-height:1.12;letter-spacing:-.03em;max-width:17ch}
+  .hero p.lead{font-size:19px;color:var(--muted);margin-top:20px;max-width:52ch}
+  .hero-actions{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap}
+  .hero-note{margin-top:18px;font-size:14px;color:var(--muted)}
+  @media(max-width:700px){.hero h1{font-size:33px}.hero{padding:48px 0 44px}}
+
+  /* блоки */
+  section{padding:68px 0;border-top:1px solid var(--line)}
+  h2{font-size:30px;letter-spacing:-.02em;margin-bottom:14px}
+  .sub{color:var(--muted);margin-bottom:34px;max-width:60ch}
+
+  .grid{display:grid;gap:20px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:860px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.g3,.g4{grid-template-columns:1fr}}
+
+  .card{border:1px solid var(--line);border-radius:14px;padding:24px;background:#fff}
+  .card h3{font-size:17px;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:15px}
+  .num{width:30px;height:30px;border-radius:8px;background:var(--soft);color:var(--brand);
+       display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;margin-bottom:14px}
+
+  .stat{font-size:34px;font-weight:700;color:var(--brand);letter-spacing:-.02em}
+  .stat-label{font-size:14px;color:var(--muted);margin-top:4px}
+
+  /* тарифы */
+  .price{border:1px solid var(--line);border-radius:14px;padding:26px;display:flex;flex-direction:column}
+  .price.featured{border-color:var(--brand);box-shadow:0 8px 28px rgba(15,123,95,.1)}
+  .tag{display:inline-block;font-size:12px;font-weight:700;color:var(--brand);background:var(--soft);
+       padding:4px 10px;border-radius:999px;margin-bottom:12px;align-self:flex-start}
+  .amount{font-size:30px;font-weight:700;letter-spacing:-.02em}
+  .amount small{font-size:15px;font-weight:500;color:var(--muted)}
+  .price ul{list-style:none;margin:18px 0 24px;font-size:15px;color:var(--muted)}
+  .price li{padding:6px 0 6px 22px;position:relative}
+  .price li::before{content:"";position:absolute;left:0;top:13px;width:11px;height:6px;
+                    border-left:2px solid var(--brand);border-bottom:2px solid var(--brand);transform:rotate(-45deg)}
+  .price .btn{margin-top:auto;text-align:center}
+
+  /* форма */
+  .form-box{background:var(--soft);border-radius:16px;padding:34px;max-width:560px}
+  .field{margin-bottom:16px}
+  label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+  input,select,textarea{
+    width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:9px;
+    font:inherit;background:#fff;color:var(--ink)
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand)}
+  .hint{font-size:13px;color:var(--muted);margin-top:12px}
+  .ok{display:none;background:#e9f5f0;border:1px solid var(--brand);border-radius:12px;padding:22px;color:var(--brand-dark)}
+  .ok strong{display:block;margin-bottom:6px;font-size:17px}
+
+  /* подвал */
+  footer{border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:14px}
+  .foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo">Qoldau<span>.</span></div>
+    <nav class="nav-links">
+      <a href="#problem">Проблема</a>
+      <a href="#how">Как работает</a>
+      <a href="#pricing">Тарифы</a>
+      <a href="#form">Заявка</a>
+    </nav>
+    <a href="#form" class="btn btn-main btn-sm" id="cta-header">Попробовать</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>Покупатель пишет ночью - Qoldau отвечает</h1>
+    <p class="lead">
+      ИИ-ассистент подключается к вашим WhatsApp, Instagram и Telegram, отвечает покупателям
+      на казахском и русском языках, а сложные вопросы передаёт вам вместе с кратким пересказом диалога.
+    </p>
+    <div class="hero-actions">
+      <a href="#form" class="btn btn-main" id="cta-hero">Подключить бесплатно на 14 дней</a>
+      <a href="#how" class="btn btn-ghost" id="cta-how">Как это работает</a>
+    </div>
+    <p class="hero-note">Без карты. Подключение занимает 15 минут.</p>
+  </div>
+</div>
+
+<section id="problem">
+  <div class="wrap">
+    <h2>Что происходит без ассистента</h2>
+    <p class="sub">
+      По результатам опроса восьми онлайн-продавцов Казахстана: семеро тратят на переписку
+      с покупателями больше шести часов в день, шестеро не успевают отвечать ночью и в выходные,
+      семеро теряли заказы из-за несвоевременного ответа.
+    </p>
+    <div class="grid g4">
+      <div class="card"><div class="stat">88%</div><div class="stat-label">тратят на переписку более 6 часов в день</div></div>
+      <div class="card"><div class="stat">75%</div><div class="stat-label">не успевают отвечать ночью и в выходные</div></div>
+      <div class="card"><div class="stat">88%</div><div class="stat-label">теряли заказы из-за долгого ответа</div></div>
+      <div class="card"><div class="stat">100%</div><div class="stat-label">нужны ответы на казахском и русском</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>Как это работает</h2>
+    <p class="sub">Четыре шага от регистрации до первого автоматического ответа покупателю.</p>
+    <div class="grid g4">
+      <div class="card">
+        <div class="num">1</div>
+        <h3>Подключаете каналы</h3>
+        <p>WhatsApp, Instagram Direct, Telegram или чат на сайте. Авторизация через официальные API.</p>
+      </div>
+      <div class="card">
+        <div class="num">2</div>
+        <h3>Загружаете базу знаний</h3>
+        <p>Прайс, условия доставки и возврата, частые вопросы. Можно выгрузкой из таблицы.</p>
+      </div>
+      <div class="card">
+        <div class="num">3</div>
+        <h3>Ассистент отвечает</h3>
+        <p>Наличие, цена, сроки доставки, статус заказа - на языке покупателя, круглосуточно.</p>
+      </div>
+      <div class="card">
+        <div class="num">4</div>
+        <h3>Сложное - вам</h3>
+        <p>Жалобы и нестандартные случаи передаются оператору с кратким пересказом диалога.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <h2>Тарифы</h2>
+    <p class="sub">Фиксированная подписка без скрытых платежей. Первые 14 дней бесплатно на любом тарифе.</p>
+    <div class="grid g3">
+      <div class="price">
+        <span class="tag">Старт</span>
+        <div class="amount">15 000 <small>тг / мес</small></div>
+        <ul>
+          <li>До 500 диалогов</li>
+          <li>Один канал</li>
+          <li>Казахский и русский</li>
+          <li>Поддержка по почте</li>
+        </ul>
+        <a href="#form" class="btn btn-ghost cta-price" data-plan="start">Выбрать</a>
+      </div>
+      <div class="price featured">
+        <span class="tag">Рабочий</span>
+        <div class="amount">45 000 <small>тг / мес</small></div>
+        <ul>
+          <li>До 2 000 диалогов</li>
+          <li>Все каналы</li>
+          <li>Передача оператору с пересказом</li>
+          <li>Отчёт по обращениям</li>
+        </ul>
+        <a href="#form" class="btn btn-main cta-price" data-plan="work">Выбрать</a>
+      </div>
+      <div class="price">
+        <span class="tag">Магазин</span>
+        <div class="amount">90 000 <small>тг / мес</small></div>
+        <ul>
+          <li>До 10 000 диалогов</li>
+          <li>Интеграция с учётной системой</li>
+          <li>Несколько операторов</li>
+          <li>Персональный менеджер</li>
+        </ul>
+        <a href="#form" class="btn btn-ghost cta-price" data-plan="shop">Выбрать</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="form">
+  <div class="wrap">
+    <h2>Оставить заявку на пилот</h2>
+    <p class="sub">Свяжемся в течение рабочего дня и подключим ассистент к одному каналу бесплатно на две недели.</p>
+
+    <div class="form-box" id="form-box">
+      <form id="lead-form" novalidate>
+        <div class="field">
+          <label for="name">Как к вам обращаться</label>
+          <input type="text" id="name" name="name" placeholder="Имя" required>
+        </div>
+        <div class="field">
+          <label for="contact">WhatsApp или Telegram</label>
+          <input type="text" id="contact" name="contact" placeholder="+7 7xx xxx xx xx" required>
+        </div>
+        <div class="field">
+          <label for="channel">Где вы продаёте</label>
+          <select id="channel" name="channel">
+            <option value="marketplace">Маркетплейс</option>
+            <option value="instagram">Instagram</option>
+            <option value="messengers">WhatsApp или Telegram</option>
+            <option value="site">Собственный сайт</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="volume">Сколько сообщений от покупателей в день</label>
+          <select id="volume" name="volume">
+            <option value="lt10">Менее 10</option>
+            <option value="10-30">10-30</option>
+            <option value="30-100">30-100</option>
+            <option value="gt100">Более 100</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-main" id="form-submit" style="width:100%">Отправить заявку</button>
+        <p class="hint">Нажимая кнопку, вы соглашаетесь на обработку контактных данных для связи по заявке.</p>
+      </form>
+
+      <div class="ok" id="thanks-box">
+        <strong>Заявка принята</strong>
+        Напишем вам в ближайший рабочий день. Если нужно быстрее - просто ответьте на это сообщение в мессенджере.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div>Qoldau - ИИ-ассистент клиентской поддержки. Алматы, 2026</div>
+    <div>Учебный проект по дисциплине "Интегрированные системы для электронного бизнеса"</div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     ЯНДЕКС.МЕТРИКА
+     Замените 00000000 на номер вашего счётчика в двух местах:
+     в вызове ym(...) и в адресе картинки внутри <noscript>.
+     ============================================================ -->
+<script type="text/javascript">
+  var METRIKA_ID = 00000000;
+
+  (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+  m[i].l=1*new Date();
+  for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+  (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+  ym(METRIKA_ID, "init", {
+    clickmap: true,          // карта кликов
+    trackLinks: true,        // отслеживание внешних ссылок
+    accurateTrackBounce: true,
+    webvisor: true           // Вебвизор
+  });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/00000000" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+<!-- ============================================================
+     ЦЕЛИ
+     Идентификаторы, которые нужно создать в Метрике как
+     JavaScript-события: cta_click, pricing_view, form_submit.
+     Четвёртая цель - "Посещение страниц" с условием: url содержит #thanks
+     ============================================================ -->
+<script>
+  // безопасный вызов: страница работает и без счётчика
+  function goal(name, params) {
+    if (typeof ym === 'function' && METRIKA_ID !== 00000000) {
+      ym(METRIKA_ID, 'reachGoal', name, params || {});
+    }
+    console.log('[goal]', name, params || '');
+  }
+
+  // ЦЕЛЬ 1: клик по любой кнопке призыва к действию
+  ['cta-header', 'cta-hero'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('click', function () { goal('cta_click', { place: id }); });
+  });
+  document.querySelectorAll('.cta-price').forEach(function (el) {
+    el.addEventListener('click', function () { goal('cta_click', { place: 'pricing', plan: el.dataset.plan }); });
+  });
+
+  // ЦЕЛЬ 2: просмотр блока тарифов (пользователь долистал до цен)
+  var pricingSent = false;
+  var pricing = document.getElementById('pricing');
+  if ('IntersectionObserver' in window && pricing) {
+    new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting && !pricingSent) {
+          pricingSent = true;
+          goal('pricing_view');
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.4 }).observe(pricing);
+  }
+
+  // ЦЕЛЬ 3: отправка формы заявки
+  // ЦЕЛЬ 4: переход на #thanks - срабатывает цель типа "Посещение страниц"
+  var form = document.getElementById('lead-form');
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+
+    var name = document.getElementById('name');
+    var contact = document.getElementById('contact');
+    if (!name.value.trim() || !contact.value.trim()) {
+      goal('form_error');
+      alert('Заполните имя и контакт, пожалуйста.');
+      return;
+    }
+
+    goal('form_submit', {
+      channel: document.getElementById('channel').value,
+      volume: document.getElementById('volume').value
+    });
+
+    form.style.display = 'none';
+    document.getElementById('thanks-box').style.display = 'block';
+
+    // смена адреса без перезагрузки - для цели "Посещение страниц"
+    history.pushState(null, '', '#thanks');
+    if (typeof ym === 'function' && METRIKA_ID !== 00000000) {
+      ym(METRIKA_ID, 'hit', window.location.pathname + '#thanks', { title: 'Заявка отправлена' });
+    }
+  });
+</script>
+
+</body>
+</html>
